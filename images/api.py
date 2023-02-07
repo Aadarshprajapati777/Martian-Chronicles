@@ -36,6 +36,8 @@ class Window(QDialog):
       parmvalue = self.Parametervalue.text()
       api_key = 'XYvgXmCtiXfENZ2bi1d6FRZRYoKEde4GWCJiNaEo'
       parameter = 'camera'
+      rover = self.Rover.currentText()
+      page = self.Page.text()
 
       
 
@@ -46,8 +48,10 @@ class Window(QDialog):
       print(queryvalue)
       print(parameter)
       print(parmvalue)
+      print(page)
+      print(rover)
 
-      urls =['https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?'+str(query)+'='+str(parmvalue)+'&'+str(parameter)+'='+str(queryvalue)+'&api_key='+str(api_key)]
+      urls =['https://api.nasa.gov/mars-photos/api/v1/rovers/'+(rover)+'/photos?'+str(query)+'='+str(parmvalue)+'&'+str(parameter)+'='+str(queryvalue)+'&page='+str(page)+'&api_key='+str(api_key)]
       for url in urls:
             response = requests.get(url)
             data = response.json()
@@ -56,6 +60,7 @@ class Window(QDialog):
                 with open (str(indx)+'.png', 'wb') as f:
                     f.write(requests.get(photo['img_src']).content) 
                     photos.append(photo['img_src'])   
+                    print("image downloaded: "+str(indx)+".png")
 
       print(photos)
       if len(photos) == 0:
@@ -71,10 +76,17 @@ class Window(QDialog):
         super().__init__()
         layout = QFormLayout()
         self.setWindowTitle("Mars Rover Image Downloader")
-        self.resize(500, 500)
+        self.resize(1111,658)
         self.Query = QComboBox()
         self.QueryValue = QComboBox()
         self.Parameter = QLineEdit()
+        self.Page = QLineEdit()
+        self.Rover = QComboBox()
+        self.Rover.addItem("curiosity")
+        self.Rover.addItem("opportunity")
+        self.Rover.addItem("spirit")
+    
+
         self.Parametervalue = QLineEdit()
         self.button = QtWidgets.QPushButton("Fetch Image")
         self.button.clicked.connect(self.deletePrevData)
@@ -83,14 +95,24 @@ class Window(QDialog):
         # layout.addRow("Parameter", self.Parameter)
         # layout.addRow("Parameter Value", self.Parametervalue)
 
-        layout.addRow(self.Query)
         layout.addRow("Select Parameter", self.Query)
         layout.addRow("Parameter Value", self.Parametervalue)
+        layout.addRow("Select Rover", self.Rover)
         self.Query.addItem("sol")
         self.Query.addItem("earth_date")
+        layout.addRow("Page", self.Page)
         layout.addRow("Select Camera", self.QueryValue)
         self.QueryValue.addItem("fhaz")
         self.QueryValue.addItem("rhaz")
+        self.QueryValue.addItem("mast")
+        self.QueryValue.addItem("chemcam")
+        self.QueryValue.addItem("mahli")
+        self.QueryValue.addItem("mardi")
+        self.QueryValue.addItem("navcam")
+        self.QueryValue.addItem("pancam")
+        self.QueryValue.addItem("minites")
+        self.Query.setGeometry(840,550,71,21)
+
 
         layout.addRow(self.button)
         self.setLayout(layout)
@@ -115,14 +137,14 @@ class Window(QDialog):
       
         self.image = QtWidgets.QLabel(self)
         self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/"+str(count)+".png"))
-        self.image.setGeometry(0, 0, 500, 500)
+        self.image.setGeometry(20,10,1081,521)
         self.image.show()
         self.button=QtWidgets.QPushButton("Next Image",self)
-        self.button.setGeometry(500, 500, 100, 100)
+        self.button.setGeometry(36, 560, 101 , 31)
         self.button.clicked.connect(self.nextimage)
         self.button.show()
         self.button=QtWidgets.QPushButton("Prev Image",self)
-        self.button.setGeometry(200, 200, 100, 50)
+        self.button.setGeometry(140, 560, 101, 31)
         self.button.clicked.connect(self.previmage)
         self.button.show()
         print(count)
@@ -154,4 +176,3 @@ if __name__ == "__main__":
     window = Window()
     window.show()
     sys.exit(app.exec())
-
