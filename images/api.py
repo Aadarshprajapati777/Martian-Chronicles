@@ -1,4 +1,5 @@
 from io import BytesIO
+import os
 import pickle
 import sys
 import requests
@@ -53,13 +54,18 @@ class Window(QDialog):
             photos = []
             for indx, photo in enumerate(data['photos']):
                 with open (str(indx)+'.png', 'wb') as f:
-                    f.write(requests.get(photo['img_src']).content)      
-            self.viewimage()                    
+                    f.write(requests.get(photo['img_src']).content) 
+                    photos.append(photo['img_src'])   
 
       print(photos)
+      if len(photos) == 0:
+            print("No photos found")
+    
+            return
+
+      self.viewimage()
 
 
-      self.viewimage()            
 
     def __init__(self):
         super().__init__()
@@ -71,7 +77,7 @@ class Window(QDialog):
         self.Parameter = QLineEdit()
         self.Parametervalue = QLineEdit()
         self.button = QtWidgets.QPushButton("Fetch Image")
-        self.button.clicked.connect(self.fetchimage)
+        self.button.clicked.connect(self.deletePrevData)
         layout = QFormLayout()
 
         # layout.addRow("Parameter", self.Parameter)
@@ -80,8 +86,6 @@ class Window(QDialog):
         layout.addRow(self.Query)
         layout.addRow("Select Parameter", self.Query)
         layout.addRow("Parameter Value", self.Parametervalue)
-
-
         self.Query.addItem("sol")
         self.Query.addItem("earth_date")
         layout.addRow("Select Camera", self.QueryValue)
@@ -91,6 +95,19 @@ class Window(QDialog):
         layout.addRow(self.button)
         self.setLayout(layout)
 
+
+
+
+
+    def deletePrevData(self):
+        for i in range(0,100):
+            try:
+                os.remove(str(i)+'.png')
+            except:
+                pass
+
+        self.fetchimage()
+     
 
     
     def viewimage(self):
@@ -127,9 +144,6 @@ class Window(QDialog):
         count -=1
         self.viewimage()
         print("prev image")
-
-    
-
 
     
 
