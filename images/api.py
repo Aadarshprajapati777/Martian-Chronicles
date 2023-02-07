@@ -76,7 +76,7 @@ class Window(QDialog):
         super().__init__()
         layout = QFormLayout()
         self.setWindowTitle("Mars Rover Image Downloader")
-        self.resize(1111,658)
+        self.resize(1920,1080)
         self.Query = QComboBox()
         self.QueryValue = QComboBox()
         self.Parameter = QLineEdit()
@@ -111,7 +111,9 @@ class Window(QDialog):
         self.QueryValue.addItem("navcam")
         self.QueryValue.addItem("pancam")
         self.QueryValue.addItem("minites")
-        self.Query.setGeometry(840,550,71,21)
+     
+
+
 
 
         layout.addRow(self.button)
