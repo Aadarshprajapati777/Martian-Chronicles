@@ -87,28 +87,32 @@ class Window(QDialog):
         self.QueryValue.addItem("fhaz")
         self.QueryValue.addItem("rhaz")
 
-
-
-
         layout.addRow(self.button)
         self.setLayout(layout)
 
 
     
-
     def viewimage(self):
+        count=0
         self.image = QtWidgets.QLabel(self)
-        self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/0.png"))
+        self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/"+str(count)+".png"))
         self.image.setGeometry(0, 0, 500, 500)
         self.image.show()
-
+        self.button=QtWidgets.QPushButton("Next Image",self)
+        self.button.setGeometry(500, 500, 100, 100)
+        self.button.clicked.connect(self.nextimage)
+        self.button.show()
+        
         print("image shown")
         layout = QFormLayout()
     
       
-      
+    def nextimage(self):
+        count+=1
+        self.viewimage()
+  
 
-    
+
     
 
 
