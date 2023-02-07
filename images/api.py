@@ -23,12 +23,12 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QButtonGroup,
 )
+from PySide6.QtGui import QPixmap
 
 
-
-
-
+count=0
 class Window(QDialog):
+
     def fetchimage(self):
       query = self.Query.currentText()
       queryvalue = self.QueryValue.currentText()
@@ -76,6 +76,7 @@ class Window(QDialog):
 
         # layout.addRow("Parameter", self.Parameter)
         # layout.addRow("Parameter Value", self.Parametervalue)
+
         layout.addRow(self.Query)
         layout.addRow("Select Parameter", self.Query)
         layout.addRow("Parameter Value", self.Parametervalue)
@@ -93,7 +94,8 @@ class Window(QDialog):
 
     
     def viewimage(self):
-        count=0
+        global count
+      
         self.image = QtWidgets.QLabel(self)
         self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/"+str(count)+".png"))
         self.image.setGeometry(0, 0, 500, 500)
@@ -102,15 +104,31 @@ class Window(QDialog):
         self.button.setGeometry(500, 500, 100, 100)
         self.button.clicked.connect(self.nextimage)
         self.button.show()
+        self.button=QtWidgets.QPushButton("Prev Image",self)
+        self.button.setGeometry(200, 200, 100, 50)
+        self.button.clicked.connect(self.previmage)
+        self.button.show()
+        print(count)
         
         print("image shown")
         layout = QFormLayout()
     
       
     def nextimage(self):
-        count+=1
+        global count
+
+        count +=1
         self.viewimage()
-  
+        print("next image")
+
+
+    def previmage(self):
+        global count
+        count -=1
+        self.viewimage()
+        print("prev image")
+
+    
 
 
     
