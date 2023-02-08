@@ -29,9 +29,14 @@ from PySide6.QtGui import QPixmap
 
 
 count=0
+photos = []
 class Window(QDialog):
 
     def fetchimage(self):
+      
+      global photos
+      self.imgDownloading()
+
       query = self.Query.currentText()
       queryvalue = self.QueryValue.currentText()
       parmvalue = self.Parametervalue.text()
@@ -60,7 +65,7 @@ class Window(QDialog):
             for indx, photo in enumerate(data['photos']):
                 with open (str(indx)+'.png', 'wb') as f:
                     f.write(requests.get(photo['img_src']).content) 
-                    photos.append(photo['img_src'])   
+                    photos.append(indx)   
                     print("image downloaded: "+str(indx)+".png")
       print(photos)
 
@@ -71,7 +76,6 @@ class Window(QDialog):
             return
       
       else:
-        self.imgDownloading()
         self.viewimage()
 
 
@@ -82,7 +86,7 @@ class Window(QDialog):
         super().__init__()
         layout = QFormLayout()
         self.setWindowTitle("Mars Rover Image Downloader")
-        self.resize(1920,1080)
+        self.resize(765,577)
         self.Query = QComboBox()
         self.QueryValue = QComboBox()
         self.Parameter = QLineEdit()
@@ -119,11 +123,10 @@ class Window(QDialog):
         self.QueryValue.addItem("minites")
      
 
-
-
-
         layout.addRow(self.button)
         self.setLayout(layout)
+
+        self.image = QtWidgets.QLabel(self)
 
     
 
@@ -158,38 +161,40 @@ class Window(QDialog):
     
     def viewimage(self):
         global count
-      
-        self.image = QtWidgets.QLabel(self)
+    
         self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/"+str(count)+".png"))
-        self.image.setGeometry(20,10,1081,521)
+        self.image.setGeometry(30,210,491,341)
         self.image.show()
         self.button=QtWidgets.QPushButton("Next Image",self)
-        self.button.setGeometry(36, 560, 101 , 31)
+        self.button.setGeometry(600,300,89,25)
         self.button.clicked.connect(self.nextimage)
         self.button.show()
         self.button=QtWidgets.QPushButton("Prev Image",self)
-        self.button.setGeometry(140, 560, 101, 31)
+        self.button.setGeometry(600,340,89,25)
         self.button.clicked.connect(self.previmage)
         self.button.show()
-        print(count)
         
-        print("image shown")
         layout = QFormLayout()
+        print("image shown")
+
     
       
     def nextimage(self):
         global count
+        global photos
 
-        count +=1
-        self.viewimage()
-        print("next image")
+        if count < len(photos):
+                count +=1
+                self.viewimage()
+                print("next image count is", count)
 
 
     def previmage(self):
         global count
-        count -=1
-        self.viewimage()
-        print("prev image")
+        if count >= 0:
+            count -=1
+            self.viewimage()
+            print("prev image count is "    , count)    
 
     
 
