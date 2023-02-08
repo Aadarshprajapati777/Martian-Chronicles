@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QCheckBox,
     QButtonGroup,
+    QMessageBox,
 )
 from PySide6.QtGui import QPixmap
 
@@ -61,14 +62,19 @@ class Window(QDialog):
                     f.write(requests.get(photo['img_src']).content) 
                     photos.append(photo['img_src'])   
                     print("image downloaded: "+str(indx)+".png")
-
       print(photos)
+
+
       if len(photos) == 0:
             print("No photos found")
-    
+            self.showmsg()
             return
+      
+      else:
+        self.imgDownloading()
+        self.viewimage()
 
-      self.viewimage()
+
 
 
 
@@ -119,8 +125,24 @@ class Window(QDialog):
         layout.addRow(self.button)
         self.setLayout(layout)
 
+    
+
+    def imgDownloading(Self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Downloading photos")
+        msg.setText("Downloading photos please wait")
+        msg.setIcon(QMessageBox.Information)
+        x = msg.exec_()
 
 
+
+
+    def showmsg(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Error")
+        msg.setText("No Photos Found")
+        msg.setIcon(QMessageBox.Critical)
+        x = msg.exec_()
 
 
     def deletePrevData(self):
