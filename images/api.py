@@ -24,7 +24,6 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QButtonGroup,
     QMessageBox,
-    Qicon,
     QSystemTrayIcon,
 )
 from PySide6.QtGui import QPixmap
@@ -43,9 +42,9 @@ class Window(QDialog):
       global photos
       self.imageDownloading()
 
-      icon=Qicon("icon.png")
-      tray=QSystemTrayIcon(icon)
-      tray.show()
+    #   icon=Qicon("icon.png")
+    #   tray=QSystemTrayIcon(icon)
+    #   tray.show()
       
 
     
@@ -88,12 +87,11 @@ class Window(QDialog):
                     photos.append(indx)   
                     print("image downloaded: "+str(indx)+".png")
                     countingphoto=countingphoto+1
-                    msg=QMessageBox()
-                    msg.setWindowTitle("Downloading")
-                    msg.setText("Downloading Image "+str(countingphoto))
-                    msg.setIcon(QMessageBox.Information)
-                    msg.setStandardButtons(QMessageBox.NoButton)
-                    x=msg.show()
+                    
+                    
+
+                    
+                    
                     if countingphoto==photocount:
                         break
                     else:
