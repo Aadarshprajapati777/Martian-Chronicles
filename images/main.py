@@ -33,7 +33,7 @@ from PySide6.QtGui import QPixmap
 import ezgmail
 import key
 
-apikey=key.API_KEY  #input your api key here
+apikey=key.API_KEY  #input your api key here, in place of (key.API_KEY)
 
 count=0
 photos = []

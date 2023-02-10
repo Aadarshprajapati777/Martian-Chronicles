@@ -1,4 +1,6 @@
 #requirements for this project
 
-pyQt5, pyside6
+Python3
+PySide6 
+Requests 
 
