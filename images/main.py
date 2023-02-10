@@ -26,9 +26,14 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QSystemTrayIcon,
 )
+
+
+
 from PySide6.QtGui import QPixmap
 import ezgmail
+import key
 
+apikey=key.API_KEY  #input your api key here
 
 count=0
 photos = []
@@ -37,40 +42,35 @@ countingphoto=0
 class Window(QDialog):
 
     def fetchimage(self):
+      
       global imagedata
       global countingphoto
       global photos
       self.imageDownloading()
-
-    #   icon=Qicon("icon.png")
-    #   tray=QSystemTrayIcon(icon)
-    #   tray.show()
-      
-
-    
-
       query = self.Query.currentText()
       queryvalue = self.QueryValue.currentText()
       parmvalue = self.Parametervalue.text()
-      api_key = 'XYvgXmCtiXfENZ2bi1d6FRZRYoKEde4GWCJiNaEo'
+      api_key = apikey
       parameter = 'camera'
       rover = self.Rover.currentText()
       page=1
       photono = self.photono.text()
       photocount=int(photono)
 
+      countingphoto=0
+
 
     #   query='sol'
     #   queryvalue = 1000 
     #   parmvalue = 'fhaz'QComboBox
 
-      print(query)
-      print(queryvalue)
-      print(parameter)
-      print(parmvalue)
-      print(photono, "photo no")
-      print(rover)
-      print(photocount,"integer photo no")
+    #   print(query)
+    #   print(queryvalue)
+    #   print(parameter)
+    #   print(parmvalue)
+    #   print(photono, "photo no")
+    #   print(rover)
+    #   print(photocount,"integer photo no")
     
 
       urls =['https://api.nasa.gov/mars-photos/api/v1/rovers/'+(rover)+'/photos?'+str(query)+'='+str(parmvalue)+'&'+str(parameter)+'='+str(queryvalue)+'&page='+str(page)+'&api_key='+str(api_key)]
@@ -87,11 +87,6 @@ class Window(QDialog):
                     photos.append(indx)   
                     print("image downloaded: "+str(indx)+".png")
                     countingphoto=countingphoto+1
-                    
-                    
-
-                    
-                    
                     if countingphoto==photocount:
                         break
                     else:
@@ -100,20 +95,17 @@ class Window(QDialog):
       print(photos)
 
       if len(photos) == 0:
-            print("No photos found")
+            print("No photo")
             self.showmsg()
             return
       
       else:
         self.viewimage()
 
-
-
-
     def __init__(self):
         super().__init__()
         layout = QFormLayout()
-        self.setWindowTitle("Mars Rover Image Downloader")
+        self.setWindowTitle("Martian Chronicles")
         self.resize(765,577)
         self.Query = QComboBox()
         self.QueryValue = QComboBox()
@@ -130,15 +122,12 @@ class Window(QDialog):
         self.button.clicked.connect(self.deletePrevData)
         layout = QFormLayout()
 
-        # layout.addRow("Parameter", self.Parameter)
-        # layout.addRow("Parameter Value", self.Parametervalue)
-
         layout.addRow("Select Parameter", self.Query)
         layout.addRow("Parameter Value", self.Parametervalue)
         layout.addRow("Select Rover", self.Rover)
         self.Query.addItem("sol")
         self.Query.addItem("earth_date")
-        layout.addRow("Photo", self.photono)
+        layout.addRow("Max.Photos", self.photono)
         layout.addRow("Select Camera", self.QueryValue)
         self.QueryValue.addItem("fhaz")
         self.QueryValue.addItem("rhaz")
@@ -172,9 +161,9 @@ class Window(QDialog):
     def showmsg(self):
         msg = QMessageBox()
         msg.setWindowTitle("Error")
-        msg.setText("No Photos Found")
+        msg.setText("No photo found on this parameter, please try again")
         msg.setIcon(QMessageBox.Critical)
-        msg.setStandardButtons(QMessageBox.NoButton)
+
         x = msg.exec_()
 
 
@@ -194,7 +183,7 @@ class Window(QDialog):
     def viewimage(self):
         global count
     
-        self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/"+str(count)+".png"))
+        self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/images/"+str(count)+".png"))
         self.image.setGeometry(30,210,491,341)
         self.image.show()
 
@@ -210,7 +199,7 @@ class Window(QDialog):
         print("image shown")
 
         self.receiver=QtWidgets.QLineEdit(self)
-        self.receiver.setGeometry(600,200,89,25)
+        self.receiver.setGeometry(550,200,190,25)
         self.receiver.show()
 
         
@@ -219,13 +208,6 @@ class Window(QDialog):
         self.button.clicked.connect(self.sendmail)
         self.button.show()
         
-
-
-
-
-
-    
-      
     def nextimage(self):
         global count
         global photos
@@ -243,32 +225,7 @@ class Window(QDialog):
             self.viewimage()
             print("prev image count is "    , count)    
 
-    
-    # def mailtemplate(self):
-    #     self.layout=QVBoxLayout(self)
-    #     self.layout.addWidget(QLabel("Receiver"))
-    #     self.receiver=QLineEdit()
-    #     self.layout.addWidget(QLabel("Subject"))
-    #     self.subject=QLineEdit()
-    #     self.layout.addWidget(QLabel("Body"))
-    #     self.body=QLineEdit()
-        
-
-
-        
-
-        
-
-        
-
-        # global photos
-        # msg = QMessageBox()
-        # msg.setWindowTitle("Sending Mail")
-        # msg.setText("Sending mail please wait")
-        # msg.setIcon(QMessageBox.Information)
-        # x = msg.exec_()
-        # print("sending mail")
-        # ezgmail.send('
+   
     def sendmail(self):
         global count
         global photos

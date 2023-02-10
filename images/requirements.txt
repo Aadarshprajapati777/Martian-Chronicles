@@ -1,0 +1,4 @@
+#requirements for this project
+
+pyQt5, pyside6
+
