@@ -1,6 +1,10 @@
 #requirements for this project
-
+virtualenv -p python3 venv
 Python3
 PySide6 
 Requests 
+Ezgmail
+PyQt5
+PyQt5-tools
+
 
