@@ -39,6 +39,12 @@ count=0
 photos = []
 imagedata = []
 countingphoto=0
+photoname=[]
+earth_date=[]
+landing_date=[]
+launch_date=[]
+
+
 class Window(QDialog):
 
     def fetchimage(self):
@@ -46,6 +52,11 @@ class Window(QDialog):
       global imagedata
       global countingphoto
       global photos
+      global photoname
+      global earth_date
+      global landing_date
+      global launch_date
+      
       self.imageDownloading()
       query = self.Query.currentText()
       queryvalue = self.QueryValue.currentText()
@@ -56,7 +67,6 @@ class Window(QDialog):
       page=1
       photono = self.photono.text()
       photocount=int(photono)
-
       countingphoto=0
 
 
@@ -87,6 +97,11 @@ class Window(QDialog):
                     photos.append(indx)   
                     print("image downloaded: "+str(indx)+".png")
                     countingphoto=countingphoto+1
+                    nameofimage=photo['img_src'].split('/')[-1]
+                    photoname.append(nameofimage)
+                    earth_date.append(photo['earth_date'])
+                    landing_date.append(photo['rover']['landing_date'])
+                    launch_date.append(photo['rover']['launch_date'])
                     if countingphoto==photocount:
                         break
                     else:
@@ -184,6 +199,7 @@ class Window(QDialog):
         global count
     
         self.image.setPixmap(QtGui.QPixmap("/home/adarsh/amfoss_backup/amfoss-tasks/martian-rover/images/"+str(count)+".png"))
+        whichphoto=str(count)
         self.image.setGeometry(30,210,491,341)
         self.image.show()
 
@@ -217,6 +233,23 @@ class Window(QDialog):
                 self.viewimage()
                 print("next image count is", count)
 
+    # def collectingdata(self):
+    #     global photoname
+    #     global earth_date
+    #     global landing_date
+    #     global launch_date
+    #     global count
+    #     print("count is",count)
+    #     print(photoname)
+    #     print(earth_date)
+    #     print(landing_date)
+    #     print(launch_date)
+    #     # emaildata=  "Name of the Image: " + photoname[count]+"\n"+"earth date: "+earth_date[count]+"\n"+"landing date: "+landing_date[count]+"\n"+"launch date: "+launch_date[count]
+    #     # print(emaildata)
+    #     self.sendmail()
+
+
+
 
     def previmage(self):
         global count
@@ -229,13 +262,22 @@ class Window(QDialog):
     def sendmail(self):
         global count
         global photos
+        global emaildata
+        global photoname
+        global earth_date
+        global landing_date
+        global launch_date
+
+
+        emaildata=  "Name of the Image: " + photoname[count]+"\n"+"earth date: "+earth_date[count]+"\n"+"landing date: "+landing_date[count]+"\n"+"launch date: "+launch_date[count] +"\n"+"query:" +self.Query.currentText()+"\n"+"query value:" +self.Parametervalue.text()+"\n"+"rover:" +self.Rover.currentText()+"\n"+"camera:" +self.QueryValue.currentText()+"\n"+"max photos:" +self.photono.text()
         msg = QMessageBox()
         msg.setWindowTitle("Sending Mail")
         msg.setText("Sending mail please wait")
         msg.setIcon(QMessageBox.Information)
         x = msg.exec_()
         print("sending mail")
-        ezgmail.send(self.receiver.text(), 'Mars Rover Image', 'This is the image of mars rover', [str(count)+'.png'])
+        print("maildata is",emaildata)
+        ezgmail.send(self.receiver.text(), 'Mars Rover Data ', emaildata,  [str(count)+'.png'])
         self.mailsent()
 
 
